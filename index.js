@@ -1,4 +1,4 @@
-var debug = require('debug')('socket')
+var debug = require('debug')('socket.io:p2p-server')
 var clients = {}
 
 module.exports.clients = clients
@@ -6,7 +6,7 @@ module.exports.Server = p2pSocket
 
 function p2pSocket (socket, next, roomName) {
   clients[socket.id] = socket
-  if (typeof room === 'string') {
+  if (typeof roomName === 'string') {
     var connectedClients = socket.adapter.rooms[roomName].sockets
   } else {
     var connectedClients = clients
