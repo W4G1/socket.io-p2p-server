@@ -17,7 +17,9 @@ function p2pSocket (socket, next, roomName) {
     delete clients[socket.id]
     Object.keys(connectedClients).forEach(function (clientId, i) {
       var client = clients[clientId]
-      client.emit('peer-disconnect', {peerId: socket.id})
+      if (client) {
+        client.emit('peer-disconnect', {peerId: socket.id})
+      }
     })
     debug('Client gone (id=' + socket.id + ').')
   })
@@ -28,9 +30,11 @@ function p2pSocket (socket, next, roomName) {
       var client = clients[clientId]
       if (client !== socket) {
         var offerObj = data.offers[i]
-        var emittedOffer = {fromPeerId: socket.id, offerId: offerObj.offerId, offer: offerObj.offer}
-        debug('Emitting offer: %s', JSON.stringify(emittedOffer))
-        client.emit('offer', emittedOffer)
+        if (offerObj) {
+          var emittedOffer = {fromPeerId: socket.id, offerId: offerObj.offerId, offer: offerObj.offer}
+          debug('Emitting offer: %s', JSON.stringify(emittedOffer))
+          client.emit('offer', emittedOffer)
+        }
       }
     })
   })
